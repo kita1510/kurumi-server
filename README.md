@@ -1,3 +1,5 @@
+##Getting started
+
 The format of the <b>connection URL</b> for your database depends on the database you use. For <b>PostgreSQL</b>, it looks as follows (the parts spelled all-uppercased are placeholders for your specific connection details):
 
 <code>postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=SCHEMA</code>
