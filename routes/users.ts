@@ -63,13 +63,13 @@ router.delete("/:id", async (req: Request, res: Response) => {
   try {
     const user = await prisma.user.delete({
       where: { id: Number(id) },
-      include: { posts: true, profile: true },
     });
     console.log(user);
-    res.status(200).json(user);
+    res.status(200).json("Delete user successful!");
   } catch (error) {
     res.status(500).json(error);
   }
 });
 
 export default router;
+
