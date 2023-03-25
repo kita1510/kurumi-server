@@ -1,38 +1,16 @@
-import { PrismaClient } from "@prisma/client";
-import { getUsers, postUser } from "./controllers/user";
+/** @format */
 
+import { PrismaClient } from "@prisma/client";
+import express from "express";
+import userRoutes from "./routes/users";
+
+const app = express();
 const prisma = new PrismaClient();
 
-async function main() {
-    // POST
-//   await prisma.user.create({
-//     data: {
-//       name: "Alice",
-//       email: "alice@prisma.io",
-//       posts: {
-//         create: { title: "Hello World" },
-//       },
-//       profile: {
-//         create: { bio: "I like turtles" },
-//       },
-//     },
-//   });
+async function main() {}
 
-  //GET ALL
-  const data =  await prisma.user.findMany({
-    include: { posts: true, profile: true },
-  });
-  console.log(data)
-
-  //UPDATE
-  const post = await prisma.post.update({
-    where: { id: 1 },
-    data: { published: true },
-  });
-  console.log(post)
-
-
-}
+app.use(express.json());
+app.use("/api/users", userRoutes);
 
 main()
   .then(async () => prisma.$disconnect)
@@ -40,3 +18,7 @@ main()
     console.log(e);
     prisma.$disconnect;
   });
+
+app.listen(8000, () => {
+  console.log("Backend server is running");
+});
