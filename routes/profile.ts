@@ -74,6 +74,8 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
+
+//UPDATE A PROFILE
 router.put("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const { bio }: Profile = req.body;

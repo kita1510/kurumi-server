@@ -5,6 +5,7 @@ import express from "express";
 import userRoutes from "./routes/users";
 import postRoutes from "./routes/posts";
 import profileRoutes from "./routes/profile";
+import commentRoutes from "./routes/comments";
 
 const app = express();
 const prisma = new PrismaClient();
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/profiles", profileRoutes);
+app.use("/api/comments", commentRoutes);
 
 main()
   .then(async () => prisma.$disconnect)
