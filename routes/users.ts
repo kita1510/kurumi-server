@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 //GET ALL
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const users: User[] = await prisma.user.findMany({
+    const users = await prisma.user.findMany({
       include: { posts: true, profile: true },
     });
     res.status(200).json(users);
@@ -24,7 +24,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   console.log(id);
   try {
-    const user: User | null = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: Number(id) },
       include: { posts: true, profile: true },
     });
@@ -42,7 +42,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   console.log(req.body);
   console.log(id);
   try {
-    const updateUser: Omit<User, "id"> = await prisma.user.update({
+    const updateUser = await prisma.user.update({
       where: { id: Number(id) || undefined },
       data: {
         name,

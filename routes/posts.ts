@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 //GET ALL POSTS
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const posts: Post[] = await prisma.post.findMany({
+    const posts = await prisma.post.findMany({
       include: { author: true, comment: true },
     });
     res.status(200).json(posts);
@@ -24,7 +24,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   console.log(id);
   try {
-    const post: Post | null = await prisma.post.findUnique({
+    const post = await prisma.post.findUnique({
       where: { id: Number(id) },
       include: { author: true, comment: true },
     });
@@ -39,7 +39,7 @@ router.post("/", async (req: Request, res: Response) => {
   const { title, content, authorId, published }: Post = req.body;
   console.log(req.body);
   try {
-    const post: Post = await prisma.post.create({
+    const post = await prisma.post.create({
       data: {
         title: title,
         content: content,
@@ -66,7 +66,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   console.log(req.body);
   console.log(id);
   try {
-    const updatePost: Pick<Post, "title" | "content"> =
+    const updatePost =
       await prisma.post.update({
         where: { id: Number(id) || undefined },
         data: {
