@@ -6,8 +6,8 @@ import userRoutes from "./routes/users";
 import postRoutes from "./routes/posts";
 import profileRoutes from "./routes/profile";
 import commentRoutes from "./routes/comments";
-import "dotenv/config";
 import cors from "cors"
+import "dotenv/config";
 
 const app = express();
 const prisma = new PrismaClient();
