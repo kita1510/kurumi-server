@@ -6,11 +6,15 @@ import userRoutes from "./routes/users";
 import postRoutes from "./routes/posts";
 import profileRoutes from "./routes/profile";
 import commentRoutes from "./routes/comments";
+import "dotenv/config";
+import cors from "cors"
 
 const app = express();
 const prisma = new PrismaClient();
 
 async function main() {}
+
+app.use(cors())
 
 app.use(express.json());
 app.use("/api/users", userRoutes);
@@ -25,6 +29,6 @@ main()
     prisma.$disconnect;
   });
 
-app.listen(8000, () => {
+app.listen(process.env.PORT, () => {
   console.log("Backend server is running");
 });
