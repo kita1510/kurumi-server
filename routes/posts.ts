@@ -1,7 +1,7 @@
 /** @format */
 
 import express, { Request, Response } from "express";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient, Post } from "@prisma/client";
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 //GET ALL POSTS
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const posts = await prisma.post.findMany({
+    const posts: Post[] = await prisma.post.findMany({
       include: { author: true, comment: true },
     });
     res.status(200).json(posts);
@@ -24,7 +24,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   console.log(id);
   try {
-    const post = await prisma.post.findUnique({
+    const post: Post | null = await prisma.post.findUnique({
       where: { id: Number(id) },
       include: { author: true, comment: true },
     });
@@ -36,12 +36,19 @@ router.get("/:id", async (req: Request, res: Response) => {
 
 // CREATE A POST
 router.post("/", async (req: Request, res: Response) => {
+  const { title, content, authorId, published }: Post = req.body;
+  console.log(req.body);
   try {
-    const post = await prisma.post.create({
+    const post: Post = await prisma.post.create({
       data: {
-        title: req.body.title,
-        author: req.body.author,
-        content: req.body.title,
+        title: title,
+        content: content,
+        published: published,
+        author: {
+          connect: {
+            id: authorId,
+          },
+        },
       },
     });
     console.log(post);
@@ -54,17 +61,25 @@ router.post("/", async (req: Request, res: Response) => {
 //  UPDATE USER
 router.put("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
+  const { title, content, authorId, published }: Post = req.body;
+
   console.log(req.body);
   console.log(id);
   try {
-    const updatePost = await prisma.post.update({
-      where: { id: Number(id) || undefined },
-      data: {
-        title: req.body.title,
-        author: req.body.author,
-        content: req.body.title,
-      },
-    });
+    const updatePost: Pick<Post, "title" | "content"> =
+      await prisma.post.update({
+        where: { id: Number(id) || undefined },
+        data: {
+          title: title,
+          content: content,
+          published: published,
+          author: {
+            connect: {
+              id: authorId,
+            },
+          },
+        },
+      });
     console.log(updatePost);
     res.status(204).json(updatePost);
   } catch (err) {
@@ -74,17 +89,17 @@ router.put("/:id", async (req: Request, res: Response) => {
 
 //DELETE USER
 router.delete("/:id", async (req: Request, res: Response) => {
-    const { id } = req.params;
-    console.log(id);
-    try {
-      const post = await prisma.post.delete({
-        where: { id: Number(id) },
-      });
-      console.log(post);
-      res.status(200).json("Delete post successful!");
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  });
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const post = await prisma.post.delete({
+      where: { id: Number(id) },
+    });
+    console.log(post);
+    res.status(200).json("Delete post successful!");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 export default router;

@@ -1,6 +1,6 @@
 /** @format */
 
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import express, { Request, Response } from "express";
 
 const router = express.Router();
@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 //GET ALL
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const users = await prisma.user.findMany({
+    const users: User[] = await prisma.user.findMany({
       include: { posts: true, profile: true },
     });
     res.status(200).json(users);
@@ -19,13 +19,12 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-
 //GET A USER
 router.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   console.log(id);
   try {
-    const user = await prisma.user.findUnique({
+    const user: User | null = await prisma.user.findUnique({
       where: { id: Number(id) },
       include: { posts: true, profile: true },
     });
@@ -38,15 +37,16 @@ router.get("/:id", async (req: Request, res: Response) => {
 //  UPDATE USER
 router.put("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
+  const { name, email }: User = req.body;
 
   console.log(req.body);
   console.log(id);
   try {
-    const updateUser = await prisma.user.update({
+    const updateUser: Omit<User, "id"> = await prisma.user.update({
       where: { id: Number(id) || undefined },
       data: {
-        name: req.body.name,
-        email: req.body.email,
+        name,
+        email,
       },
     });
     console.log(updateUser);
@@ -72,4 +72,3 @@ router.delete("/:id", async (req: Request, res: Response) => {
 });
 
 export default router;
-
