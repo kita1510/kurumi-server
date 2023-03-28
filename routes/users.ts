@@ -61,9 +61,6 @@ router.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   console.log(id);
   try {
-    const user = await prisma.user.delete({
-      where: { id: Number(id) },
-    });
     await prisma.comment.deleteMany({
       where: { authorId: Number(id) },
     });
@@ -73,8 +70,9 @@ router.delete("/:id", async (req: Request, res: Response) => {
     await prisma.profile.delete({
       where: { userId: Number(id) },
     });
-
-    console.log(user);
+    await prisma.user.delete({
+      where: { id: Number(id) },
+    });
     console.log(posts);
     res.status(200).json("Delete user successful!");
   } catch (error) {

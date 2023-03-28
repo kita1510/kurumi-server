@@ -18,7 +18,10 @@ router.post("/register", async (req: Request, res: Response) => {
       data: {
         name: name,
         email: email,
-        password: CryptoJS.AES.encrypt(password, "nino").toString(),
+        password: CryptoJS.AES.encrypt(
+          password,
+          process.env.SECRET_KEY as string
+        ).toString(),
         Role: Role,
       },
     });
@@ -38,31 +41,34 @@ router.post("/login", async (req: Request, res: Response) => {
         email: email,
       },
     });
-    !user && res.status(401).json("Wrong password!");
-    console.log(process.env.SECRET_KEY);
-    const bytes = CryptoJS.AES.decrypt(
-      user?.password as string,
-      process.env.SECRET_KEY as string
-    );
-    const originalPassword = bytes.toString(CryptoJS.enc.Utf8);
-    originalPassword !== password &&
-      res.status(401).json("Wrong email or password!");
-
-    const accessToken = jwt.sign(
-      { id: user?.id, role: user?.Role },
-      process.env.SECRET_KEY as string,
-      {
-        expiresIn: "5d",
+    if (!user) res.status(401).json("Wrong email!");
+    else {
+      console.log(process.env.SECRET_KEY);
+      const bytes = CryptoJS.AES.decrypt(
+        user?.password as string,
+        process.env.SECRET_KEY as string
+      );
+      const originalPassword = bytes.toString(CryptoJS.enc.Utf8);
+      if (originalPassword !== password) {
+        res.status(401).json("Wrong password!");
+      } else {
+        const accessToken = jwt.sign(
+          { id: user?.id, role: user?.Role },
+          process.env.SECRET_KEY as string,
+          {
+            expiresIn: "5d",
+          }
+        );
+        const info = {
+          id: user?.id,
+          name: user?.name,
+          email: user?.password,
+          Role: user?.Role,
+        };
+        console.log(info);
+        res.status(200).json({ ...info, accessToken });
       }
-    );
-    const info = {
-      id: user?.id,
-      name: user?.name,
-      email: user?.password,
-      Role: user?.Role,
-    };
-    console.log(info);
-    res.status(200).json({ ...info, accessToken });
+    }
   } catch (err) {
     res.status(500).json(err);
   }

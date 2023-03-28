@@ -1,10 +1,10 @@
 /** @format */
 
 import { NextFunction, Request, Response } from "express";
-import jwt, {Jwt} from "jsonwebtoken";
+import jwt, { Jwt } from "jsonwebtoken";
 import "dotenv/config";
 
-const verify = (req, res, next: NextFunction) => {
+const verify = (req: any, res: any, next: NextFunction) => {
   const authHeader = req.headers.token;
   if (typeof authHeader === "string") {
     const token = authHeader.split(" ")[1];
