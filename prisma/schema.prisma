@@ -15,6 +15,7 @@ model User {
   name     String?
   email    String    @unique
   password String
+  Role     ROLE      @default(USER)
   posts    Post[]
   profile  Profile?
   comment  Comment[]
@@ -50,4 +51,9 @@ model Comment {
   updatedAt DateTime @updatedAt
   author    User     @relation(fields: [authorId], references: [id])
   post      Post     @relation(fields: [postId], references: [id])
+}
+
+enum ROLE {
+  USER
+  ADMIN
 }

@@ -6,6 +6,7 @@ import userRoutes from "./routes/users";
 import postRoutes from "./routes/posts";
 import profileRoutes from "./routes/profile";
 import commentRoutes from "./routes/comments";
+import authRoutes from "./routes/auth";
 import cors from "cors"
 import "dotenv/config";
 
@@ -17,6 +18,7 @@ async function main() {}
 app.use(cors())
 
 app.use(express.json());
+app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/profiles", profileRoutes);
