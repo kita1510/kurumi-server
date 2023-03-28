@@ -11,20 +11,22 @@ datasource db {
 }
 
 model User {
-  id      Int       @id @default(autoincrement())
-  name    String?
-  email   String
-  posts   Post[]
-  profile Profile?
-  comment Comment[]
+  id       Int       @id @default(autoincrement())
+  name     String?
+  email    String    @unique
+  password String
+  posts    Post[]
+  profile  Profile?
+  comment  Comment[]
 }
 
 model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  avatar String?
-  user   User    @relation(fields: [userId], references: [id])
-  userId Int     @unique
+  id       Int     @id @default(autoincrement())
+  bio      String?
+  avatar   String?
+  follower Int     @default(0)
+  user     User    @relation(fields: [userId], references: [id])
+  userId   Int     @unique
 }
 
 model Post {
