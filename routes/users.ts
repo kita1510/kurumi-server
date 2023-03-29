@@ -30,14 +30,14 @@ router.get("/:id", async (req: Request, res: Response) => {
     });
     res.status(200).json(user);
   } catch (err) {
-    res.status(500).json("User Not Found!");
+    res.status(500).json(err);
   }
 });
 
 //  UPDATE USER
 router.put("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { name, email }: User = req.body;
+  const { name, email }:User = req.body;
 
   console.log(req.body);
   console.log(id);

@@ -13,6 +13,7 @@ import "dotenv/config";
 const app = express();
 const prisma = new PrismaClient();
 
+const PORT = process.env.PORT || 3001
 async function main() {}
 
 app.use(cors())
@@ -31,6 +32,6 @@ main()
     prisma.$disconnect;
   });
 
-app.listen(process.env.PORT, () => {
+app.listen(PORT, () => {
   console.log("Backend server is running");
 });
