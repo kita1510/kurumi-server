@@ -99,7 +99,7 @@
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-    "baseUrl": "types",
-    "typeRoots": ["types"]
+    "baseUrl": "src/types",
+    "typeRoots": ["src/types"]
   }
 }

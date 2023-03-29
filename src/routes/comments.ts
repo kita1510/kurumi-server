@@ -2,6 +2,7 @@
 
 import express, { Request, Response } from "express";
 import { PrismaClient, Comment } from "@prisma/client";
+import verify from "../middlewares/verifyToken";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -33,7 +34,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 // CREATE A COMMENT
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", verify, async (req: Request, res: Response) => {
   const { authorId, postId, content }: Comment = req.body;
   console.log(req.body);
   try {

@@ -2,7 +2,7 @@
 
 import express, { Request, Response } from "express";
 import { Prisma, PrismaClient, Profile } from "@prisma/client";
-import verify from "../verifyToken";
+import verify from "../middlewares/verifyToken";
 const router = express.Router();
 
 const prisma = new PrismaClient();
