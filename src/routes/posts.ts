@@ -58,7 +58,7 @@ router.post("/", verify, async (req: any, res: Response) => {
       res.status(500).json(err);
     }
   } else {
-    res.status(401).json("You can not post because this account!");
+    res.status(401).json("You can not post ");
   }
 });
 

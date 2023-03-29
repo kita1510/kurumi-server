@@ -34,65 +34,87 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 // CREATE A COMMENT
-router.post("/", verify, async (req: Request, res: Response) => {
+router.post("/", verify, async (req: any, res: Response) => {
   const { authorId, postId, content }: Comment = req.body;
-  console.log(req.body);
-  try {
-    const post = await prisma.comment.create({
-      data: {
-        content: content,
-        author: {
-          connect: {
-            id: authorId,
+  // @ts-ignore
+  console.log(req?.user);
+  // @ts-ignore
+  if (req?.user?.id === authorId || req?.user?.Role === "ADMIN") {
+    try {
+      await prisma.comment.create({
+        data: {
+          content: content,
+          author: {
+            connect: {
+              id: authorId,
+            },
+          },
+          post: {
+            connect: {
+              id: postId,
+            },
           },
         },
-        post: {
-          connect: {
-            id: postId,
-          },
-        },
-      },
-    });
-    console.log(post);
-    res.status(201).json(post);
-  } catch (err) {
-    res.status(500).json(err);
+      });
+      res.status(201).json("Create comment successful!");
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  } else {
+    res.status(401).json("Unable to post comment!");
   }
 });
 
 //DELETE A COMMENT
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", verify, async (req: Request, res: Response) => {
   const { id } = req.params;
-  console.log(id);
-  try {
-    const comment = await prisma.comment.delete({
-      where: { id: Number(id) },
-    });
-    console.log(comment);
-    res.status(200).json("Delete comment successful!");
-  } catch (error) {
-    res.status(500).json(error);
+  const comment = await prisma.comment.findUnique({
+    where: { id: Number(id) },
+  });
+  if (comment) {
+    // @ts-ignore
+    if (req?.user?.id === comment?.authorId || req?.user?.Role === "ADMIN") {
+      try {
+        const comment = await prisma.comment.delete({
+          where: { id: Number(id) },
+        });
+        console.log(comment);
+        res.status(200).json("Delete comment successful!");
+      } catch (error) {
+        res.status(500).json(error);
+      }
+    } else {
+      res.status(401).json("Unabled to delete comment!");
+    }
+  } else {
+    res.status(403).json("Can't find comment!")
   }
 });
 
 // UPDATE A COMMENT
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", verify, async (req: Request, res: Response) => {
   const { id } = req.params;
   const { content }: Comment = req.body;
   console.log(id);
   console.log(content);
-
-  try {
-    const updatedComment = await prisma.comment.update({
-      where: { id: Number(id) },
-      data: {
-        content: content,
-      },
-    });
-    // console.log(updatedComment)
-    res.status(204).json("Update comment successful");
-  } catch (err) {
-    res.status(500).json("Can not get post because: " + err);
+  const comment = await prisma.comment.findUnique({
+    where: { id: Number(id) },
+  });
+  // @ts-ignore
+  if (req?.user?.id === comment?.authorId || req?.user?.Role === "ADMIN") {
+    try {
+      const updatedComment = await prisma.comment.update({
+        where: { id: Number(id) },
+        data: {
+          content: content,
+        },
+      });
+      res.status(200).json("Updated comment successful");
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  } else {
+    res.status(401).json("Unabled to delete comment!");
   }
 });
 export default router;
