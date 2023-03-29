@@ -47,7 +47,7 @@ router.delete("/:id", verify, async (req: Request, res: Response) => {
         });
         res.status(200).json("Delete profile successful!");
       } catch (err) {
-        res.status(500).json("Can not get post because: " + err);
+        res.status(500).json(err);
       }
     } else {
       res.status(401).json("You can delete only your profile!");
@@ -79,7 +79,7 @@ router.post("/", verify, async (req: Request, res: Response) => {
         });
         res.status(201).json(newProfile);
       } catch (err) {
-        res.status(500).json("Can not get post because: " + err);
+        res.status(500).json(err);
       }
     } else {
       res.status(401).json("You can create only your profile!");
@@ -87,7 +87,7 @@ router.post("/", verify, async (req: Request, res: Response) => {
   } else {
     res
       .status(403)
-      .json("Can not create a profile because profile is available!");
+      .json("Profile is available!");
   }
 });
 
@@ -110,7 +110,7 @@ router.put("/:id", verify, async (req: Request, res: Response) => {
       });
       res.status(200).json("Update profile successful!");
     } catch (err) {
-      res.status(500).json("Can not get post because: " + err);
+      res.status(500).json(err);
     }
   } else {
     res.status(401).json("You can update only your profile!");

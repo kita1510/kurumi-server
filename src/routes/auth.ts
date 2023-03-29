@@ -43,7 +43,6 @@ router.post("/login", async (req: Request, res: Response) => {
     });
     if (!user) res.status(401).json("Wrong email!");
     else {
-      // console.log(process.env.SECRET_KEY);
       const bytes = CryptoJS.AES.decrypt(
         user?.password as string,
         process.env.SECRET_KEY as string
