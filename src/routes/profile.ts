@@ -33,12 +33,13 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 // DELETE A PROFILE
-router.delete("/:id", verify, async (req: any, res: Response) => {
+router.delete("/:id", verify, async (req: Request, res: Response) => {
   const { id } = req.params;
   const profile = await prisma.profile.findUnique({
     where: { id: Number(id) },
   });
   if (profile) {
+    // @ts-ignore
     if (req?.user?.Role === "ADMIN" || req?.user?.id === profile?.userId) {
       try {
         await prisma.profile.delete({
@@ -57,12 +58,13 @@ router.delete("/:id", verify, async (req: any, res: Response) => {
 });
 
 // CREATE A PROFILE
-router.post("/", verify, async (req: any, res: Response) => {
+router.post("/", verify, async (req: Request, res: Response) => {
   const { bio, userId }: Profile = req.body;
   const profile = await prisma.profile.findUnique({
     where: { userId: userId },
   });
   if (!profile) {
+    // @ts-ignore
     if (req?.user?.Role === "ADMIN" || req?.user?.id === userId) {
       try {
         const newProfile = await prisma.profile.create({
@@ -90,12 +92,13 @@ router.post("/", verify, async (req: any, res: Response) => {
 });
 
 //UPDATE A PROFILE
-router.put("/:id", verify, async (req: any, res: Response) => {
+router.put("/:id", verify, async (req: Request, res: Response) => {
   const { id } = req.params;
   const { bio, avatar }: Profile = req.body;
   const profile = await prisma.profile.findUnique({
     where: { id: Number(id) },
   });
+  // @ts-ignore
   if (req?.user?.Role === "ADMIN" || req?.user?.id === profile?.userId) {
     try {
       await prisma.profile.update({

@@ -34,7 +34,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 // CREATE A COMMENT
-router.post("/", verify, async (req: any, res: Response) => {
+router.post("/", verify, async (req: Request, res: Response) => {
   const { authorId, postId, content }: Comment = req.body;
   // @ts-ignore
   console.log(req?.user);
@@ -87,7 +87,7 @@ router.delete("/:id", verify, async (req: Request, res: Response) => {
       res.status(401).json("Unabled to delete comment!");
     }
   } else {
-    res.status(403).json("Can't find comment!")
+    res.status(403).json("Can't find comment!");
   }
 });
 

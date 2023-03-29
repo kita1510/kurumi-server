@@ -35,9 +35,10 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 // CREATE A POST
-router.post("/", verify, async (req: any, res: Response) => {
+router.post("/", verify, async (req: Request, res: Response) => {
   const { title, content, authorId, published }: Post = req.body;
   // console.log(req.body);
+  // @ts-ignore
   if (req?.user?.id === authorId || req?.user?.Role === "ADMIN") {
     try {
       const post = await prisma.post.create({
