@@ -2,7 +2,8 @@
 
 import express, { Request, Response } from "express";
 import { Prisma, PrismaClient, Profile } from "@prisma/client";
-
+import verify from "../verifyToken";
+import jwt from "jsonwebtoken";
 const router = express.Router();
 
 const prisma = new PrismaClient();
@@ -17,7 +18,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-//GET A BIO
+//GET A PROFILE
 router.get("/find/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const userId = req.query;
@@ -33,39 +34,44 @@ router.get("/find/:id", async (req: Request, res: Response) => {
 });
 
 // DELETE A PROFILE
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", verify, async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     await prisma.profile.delete({
       where: { id: Number(id) },
     });
-    res.status(204).json("Delete profile successful!");
+    res.status(200).json("Delete profile successful!");
   } catch (err) {
     res.status(500).json("Can not get post because: " + err);
   }
 });
-
+ 
 // CREATE A PROFILE
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", verify, async (req: any, res: Response) => {
   const { bio, userId }: Profile = req.body;
+  const user = await prisma.user.findUnique({ where: { id: userId } });
   const profile = await prisma.profile.findUnique({
     where: { userId: userId },
   });
   if (!profile) {
-    try {
-      const newProfile = await prisma.profile.create({
-        data: {
-          bio: bio,
-          user: {
-            connect: {
-              id: userId,
+    if (req?.user?.Role === "ADMIN" || req?.user?.id == userId) {
+      try {
+        const newProfile = await prisma.profile.create({
+          data: {
+            bio: bio,
+            user: {
+              connect: {
+                id: userId,
+              },
             },
           },
-        },
-      });
-      res.status(201).json(newProfile);
-    } catch (err) {
-      res.status(500).json("Can not get post because: " + err);
+        });
+        res.status(201).json(newProfile);
+      } catch (err) {
+        res.status(500).json("Can not get post because: " + err);
+      }
+    } else {
+      res.status(401).json("You can create only your profile!");
     }
   } else {
     res
@@ -73,7 +79,6 @@ router.post("/", async (req: Request, res: Response) => {
       .json("Can not create a profile because profile is available");
   }
 });
-
 
 //UPDATE A PROFILE
 router.put("/:id", async (req: Request, res: Response) => {

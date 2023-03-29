@@ -36,14 +36,14 @@ router.post("/register", async (req: Request, res: Response) => {
 router.post("/login", async (req: Request, res: Response) => {
   try {
     const { email, password }: User = req.body;
-    const user: User | null = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         email: email,
       },
     });
     if (!user) res.status(401).json("Wrong email!");
     else {
-      console.log(process.env.SECRET_KEY);
+      // console.log(process.env.SECRET_KEY);
       const bytes = CryptoJS.AES.decrypt(
         user?.password as string,
         process.env.SECRET_KEY as string
@@ -53,7 +53,7 @@ router.post("/login", async (req: Request, res: Response) => {
         res.status(401).json("Wrong password!");
       } else {
         const accessToken = jwt.sign(
-          { id: user?.id, role: user?.Role },
+          { id: user?.id, Role: user?.Role },
           process.env.SECRET_KEY as string,
           {
             expiresIn: "5d",
@@ -62,10 +62,10 @@ router.post("/login", async (req: Request, res: Response) => {
         const info = {
           id: user?.id,
           name: user?.name,
-          email: user?.password,
+          email: user?.email,
           Role: user?.Role,
         };
-        console.log(info);
+        // console.log(info);
         res.status(200).json({ ...info, accessToken });
       }
     }
