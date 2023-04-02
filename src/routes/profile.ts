@@ -85,9 +85,7 @@ router.post("/", verify, async (req: Request, res: Response) => {
       res.status(401).json("You can create only your profile!");
     }
   } else {
-    res
-      .status(403)
-      .json("Profile is available!");
+    res.status(403).json("Profile is available!");
   }
 });
 
@@ -104,7 +102,7 @@ router.put("/:id", verify, async (req: Request, res: Response) => {
       await prisma.profile.update({
         where: { id: Number(id) },
         data: {
-          bio: bio,
+          bio,
           avatar,
         },
       });
