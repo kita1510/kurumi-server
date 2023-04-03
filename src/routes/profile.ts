@@ -17,6 +17,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+
 //GET A PROFILE
 router.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -59,7 +60,7 @@ router.delete("/:id", verify, async (req: Request, res: Response) => {
 
 // CREATE A PROFILE
 router.post("/", verify, async (req: Request, res: Response) => {
-  const { bio, userId }: Profile = req.body;
+  const { bio, avatar, userId }: Profile = req.body;
   const profile = await prisma.profile.findUnique({
     where: { userId: userId },
   });
@@ -69,7 +70,8 @@ router.post("/", verify, async (req: Request, res: Response) => {
       try {
         const newProfile = await prisma.profile.create({
           data: {
-            bio: bio,
+            bio,
+            avatar,
             user: {
               connect: {
                 id: userId,
