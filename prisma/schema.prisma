@@ -11,25 +11,24 @@ datasource db {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  name     String?
-  email    String    @unique
-  password String
-  Role     ROLE      @default(USER)
-  posts    Post[]
-  profile  Profile?
-  comment  Comment[]
-  Follow   Follow[]
+  id        Int       @id @default(autoincrement())
+  name      String?
+  email     String    @unique
+  password  String
+  Role      ROLE      @default(USER)
+  posts     Post[]
+  profile   Profile?
+  comment   Comment[]
+  following Follow[]
 }
 
 model Profile {
   id       Int      @id @default(autoincrement())
   bio      String?
   avatar   String?
-  follower Int      @default(0)
   user     User     @relation(fields: [userId], references: [id])
   userId   Int      @unique
-  Follow   Follow[]
+  follower Follow[]
 }
 
 model Follow {
@@ -42,18 +41,18 @@ model Follow {
 }
 
 model Post {
-  id         Int        @id @default(autoincrement())
-  title      String     @db.VarChar(255)
+  id         Int                 @id @default(autoincrement())
+  title      String              @db.VarChar(255)
   content    String?
   coverPage  String?
-  published  Boolean    @default(false)
-  liked      Int        @default(0)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  author     User       @relation(fields: [authorId], references: [id])
+  published  Boolean             @default(false)
+  liked      Int                 @default(0)
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  author     User                @relation(fields: [authorId], references: [id])
   authorId   Int
   comment    Comment[]
-  categories Category[]
+  categories CategoriesOnPosts[]
 }
 
 model Comment {
@@ -68,9 +67,18 @@ model Comment {
 }
 
 model Category {
-  id    Int    @id @default(autoincrement())
+  id    Int                 @id @default(autoincrement())
   name  String
-  posts Post[]
+  posts CategoriesOnPosts[]
+}
+
+model CategoriesOnPosts {
+  postId     Int
+  categoryId Int
+  post       Post     @relation(fields: [postId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@id([postId, categoryId])
 }
 
 enum ROLE {

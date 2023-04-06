@@ -7,6 +7,7 @@ import postRoutes from "./src/routes/posts";
 import profileRoutes from "./src/routes/profile";
 import commentRoutes from "./src/routes/comments";
 import authRoutes from "./src/routes/auth";
+import categoryRoutes from "./src/routes/category";
 import cors from "cors";
 import "dotenv/config";
 
@@ -24,6 +25,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/profiles", profileRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/categories", categoryRoutes);
 
 main()
   .then(async () => prisma.$disconnect)
