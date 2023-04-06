@@ -25,7 +25,7 @@ model User {
 model Profile {
   id       Int      @id @default(autoincrement())
   bio      String?
-  avatar   String?
+  avatar   String   @default("")
   user     User     @relation(fields: [userId], references: [id])
   userId   Int      @unique
   follower Follow[]
