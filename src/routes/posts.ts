@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
 router.get("/", async (req: Request, res: Response) => {
   try {
     const posts = await prisma.post.findMany({
-      include: { author: true, comment: true },
+      include: { author: true, comment: true, categories: true },
     });
     res.status(200).json(posts);
   } catch (err) {
@@ -45,7 +45,6 @@ router.post("/", verify, async (req: Request, res: Response) => {
         data: {
           title: title,
           content: content,
-          published: published,
           author: {
             connect: {
               id: authorId,

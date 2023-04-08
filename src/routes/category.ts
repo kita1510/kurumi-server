@@ -12,8 +12,18 @@ const router = express.Router();
 
 const prisma = new PrismaClient();
 
+// GET ALL CATEGORY
+router.get("/", async (req: Request, res: Response) => {
+  try {
+    const posts = await prisma.category.findMany();
+    res.status(201).json(posts);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // GET POST BY CATEGORY
-router.get("/:name", verify, async (req: Request, res: Response) => {
+router.get("/:name", async (req: Request, res: Response) => {
   const { categoryId, postId }: CategoriesOnPosts = req.body;
   const { name } = req.params;
   console.log(name);

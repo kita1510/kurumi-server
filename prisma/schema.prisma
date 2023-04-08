@@ -70,6 +70,8 @@ model Category {
   id    Int                 @id @default(autoincrement())
   name  String
   posts CategoriesOnPosts[]
+
+  @@unique([name])
 }
 
 model CategoriesOnPosts {
