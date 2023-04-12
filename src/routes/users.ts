@@ -13,7 +13,7 @@ const prisma = new PrismaClient();
 router.get("/", async (req: Request, res: Response) => {
   try {
     const users = await prisma.user.findMany({
-      include: { posts: true, profile: true,comment: true, following: true },
+      include: { posts: true, profile: true, comment: true, following: true },
     });
     res.status(200).json(users);
   } catch (err) {

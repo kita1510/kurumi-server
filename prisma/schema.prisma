@@ -11,15 +11,17 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String?
-  email     String    @unique
-  password  String
-  Role      ROLE      @default(USER)
-  posts     Post[]
-  profile   Profile?
-  comment   Comment[]
-  following Follow[]
+  id            Int             @id @default(autoincrement())
+  name          String?         @unique
+  email         String          @unique
+  password      String
+  Role          ROLE            @default(USER)
+  posts         Post[]
+  profile       Profile?
+  comment       Comment[]
+  following     Follow[]
+  PostOnLiked   PostOnLiked[]
+  PostOnLibrary PostOnLibrary[]
 }
 
 model Profile {
@@ -41,18 +43,21 @@ model Follow {
 }
 
 model Post {
-  id         Int                 @id @default(autoincrement())
-  title      String              @db.VarChar(255)
-  content    String?
-  coverPage  String?
-  published  Boolean             @default(false)
-  liked      Int                 @default(0)
-  createdAt  DateTime            @default(now())
-  updatedAt  DateTime            @updatedAt
-  author     User                @relation(fields: [authorId], references: [id])
-  authorId   Int
-  comment    Comment[]
-  categories CategoriesOnPosts[]
+  id            Int                 @id @default(autoincrement())
+  title         String              @db.VarChar(255)
+  content       String?
+  description   String?
+  coverPage     String?
+  published     Boolean             @default(false)
+  liked         Int                 @default(0)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  author        User                @relation(fields: [authorId], references: [id])
+  authorId      Int
+  comment       Comment[]
+  categories    CategoriesOnPosts[]
+  PostOnLiked   PostOnLiked[]
+  PostOnLibrary PostOnLibrary[]
 }
 
 model Comment {
@@ -60,6 +65,7 @@ model Comment {
   content   String
   authorId  Int
   postId    Int
+  liked     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   author    User     @relation(fields: [authorId], references: [id])
@@ -81,6 +87,24 @@ model CategoriesOnPosts {
   category   Category @relation(fields: [categoryId], references: [id])
 
   @@id([postId, categoryId])
+}
+
+model PostOnLiked {
+  postId Int
+  userId Int
+  post   Post @relation(fields: [postId], references: [id])
+  user   User @relation(fields: [userId], references: [id])
+
+  @@id([postId, userId])
+}
+
+model PostOnLibrary {
+  postId Int
+  userId Int
+  post   Post @relation(fields: [postId], references: [id])
+  user   User @relation(fields: [userId], references: [id])
+
+  @@id([postId, userId])
 }
 
 enum ROLE {
