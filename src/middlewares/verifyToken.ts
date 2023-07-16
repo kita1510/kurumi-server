@@ -5,7 +5,7 @@ import jwt, { Jwt } from "jsonwebtoken";
 import "dotenv/config";
 
 const verify = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization as string;
+  const authHeader = req.headers.authorization;
   if (authHeader) {
     const token = authHeader.split(" ")[1];
     jwt.verify(token, process.env.SECRET_KEY as "", (err, user) => {
