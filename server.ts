@@ -4,7 +4,6 @@ import { PrismaClient } from "@prisma/client";
 import express from "express";
 import userRoutes from "./src/routes/users";
 import postRoutes from "./src/routes/posts";
-import profileRoutes from "./src/routes/profile";
 import commentRoutes from "./src/routes/comments";
 import authRoutes from "./src/routes/auth";
 import categoryRoutes from "./src/routes/category";
@@ -15,6 +14,7 @@ const app = express();
 const prisma = new PrismaClient();
 
 const PORT = process.env.PORT || 3001;
+
 async function main() {}
 
 app.use(cors());
@@ -23,7 +23,6 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
-app.use("/api/profiles", profileRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/categories", categoryRoutes);
 
