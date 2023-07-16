@@ -8,6 +8,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // relationMode = "prisma"
 }
 
 model User {
@@ -16,10 +17,10 @@ model User {
   email         String          @unique
   password      String
   Role          ROLE            @default(USER)
-  posts         Post[]
-  profile       Profile?
-  comment       Comment[]
-  following     Follow[]
+  posts         Post[]          @relation("Post")
+  profile       Profile?        @relation("ProfileOfUser")
+  comment       Comment[]       @relation("CommentOfUser")
+  following     Follow[]        @relation("FollowingUser")
   PostOnLiked   PostOnLiked[]
   PostOnLibrary PostOnLibrary[]
 }
@@ -27,17 +28,17 @@ model User {
 model Profile {
   id       Int      @id @default(autoincrement())
   bio      String?
-  avatar   String   @default("")
-  user     User     @relation(fields: [userId], references: [id])
-  userId   Int      @unique
-  follower Follow[]
+  avatar   String
+  user     User?    @relation("ProfileOfUser", fields: [userId], references: [id])
+  userId   Int?     @unique
+  follower Follow[] @relation("FollowerUser")
 }
 
 model Follow {
   followerId Int
-  users      User    @relation(fields: [followerId], references: [id])
+  users      User    @relation("FollowingUser",fields: [followerId], references: [id])
   profileId  Int
-  profiles   Profile @relation(fields: [profileId], references: [id])
+  profiles   Profile @relation("FollowerUser",fields: [profileId], references: [id])
 
   @@id([followerId, profileId])
 }
@@ -52,7 +53,7 @@ model Post {
   liked         Int                 @default(0)
   createdAt     DateTime            @default(now())
   updatedAt     DateTime            @updatedAt
-  author        User                @relation(fields: [authorId], references: [id])
+  author        User                @relation("Post", fields: [authorId], references: [id])
   authorId      Int
   comment       Comment[]
   categories    CategoriesOnPosts[]
@@ -68,7 +69,7 @@ model Comment {
   liked     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  author    User     @relation(fields: [authorId], references: [id])
+  author    User     @relation("CommentOfUser", fields: [authorId], references: [id])
   post      Post     @relation(fields: [postId], references: [id])
 }
 
