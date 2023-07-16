@@ -12,8 +12,6 @@ import {
 
 const router = express.Router();
 
-const prisma = new PrismaClient();
-
 //GET ALL USERS
 router.get("/", getAllUser);
 

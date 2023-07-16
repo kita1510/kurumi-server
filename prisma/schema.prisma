@@ -18,27 +18,16 @@ model User {
   password      String
   Role          ROLE            @default(USER)
   posts         Post[]          @relation("Post")
-  profile       Profile?        @relation("ProfileOfUser")
   comment       Comment[]       @relation("CommentOfUser")
   following     Follow[]        @relation("FollowingUser")
-  PostOnLiked   PostOnLiked[]
-  PostOnLibrary PostOnLibrary[]
-}
-
-model Profile {
-  id       Int      @id @default(autoincrement())
-  bio      String?
-  avatar   String
-  user     User?    @relation("ProfileOfUser", fields: [userId], references: [id])
-  userId   Int?     @unique
-  follower Follow[] @relation("FollowerUser")
+  PostOnLiked   PostLiked[]
+  PostOnLibrary PostInLibrary[]
 }
 
 model Follow {
   followerId Int
-  users      User    @relation("FollowingUser",fields: [followerId], references: [id])
+  users      User @relation("FollowingUser", fields: [followerId], references: [id])
   profileId  Int
-  profiles   Profile @relation("FollowerUser",fields: [profileId], references: [id])
 
   @@id([followerId, profileId])
 }
@@ -56,9 +45,9 @@ model Post {
   author        User                @relation("Post", fields: [authorId], references: [id])
   authorId      Int
   comment       Comment[]
-  categories    CategoriesOnPosts[]
-  PostOnLiked   PostOnLiked[]
-  PostOnLibrary PostOnLibrary[]
+  categories    CategoriesOfPost[]
+  PostOnLiked   PostLiked[]
+  PostOnLibrary PostInLibrary[]
 }
 
 model Comment {
@@ -76,12 +65,12 @@ model Comment {
 model Category {
   id    Int                 @id @default(autoincrement())
   name  String
-  posts CategoriesOnPosts[]
+  posts CategoriesOfPost[]
 
   @@unique([name])
 }
 
-model CategoriesOnPosts {
+model CategoriesOfPost {
   postId     Int
   categoryId Int
   post       Post     @relation(fields: [postId], references: [id])
@@ -90,7 +79,7 @@ model CategoriesOnPosts {
   @@id([postId, categoryId])
 }
 
-model PostOnLiked {
+model PostLiked {
   postId Int
   userId Int
   post   Post @relation(fields: [postId], references: [id])
@@ -99,7 +88,7 @@ model PostOnLiked {
   @@id([postId, userId])
 }
 
-model PostOnLibrary {
+model PostInLibrary {
   postId Int
   userId Int
   post   Post @relation(fields: [postId], references: [id])
