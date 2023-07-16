@@ -3,16 +3,11 @@
 import express, { Request, Response } from "express";
 import { Prisma, PrismaClient, Post } from "@prisma/client";
 import verify from "../middlewares/verifyToken";
-import {
-  createPost,
-  deletePost,
-  getAllPosts,
-  getSinglePost,
-  updatePost,
-} from "../controllers/postController";
+import postController from "../controllers/postController";
 const router = express.Router();
 
-const prisma = new PrismaClient();
+const { createPost, deletePost, getAllPosts, getSinglePost, updatePost } =
+  postController;
 
 //GET ALL POSTS
 router.get("/", getAllPosts);

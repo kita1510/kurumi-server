@@ -3,14 +3,11 @@
 import { PrismaClient, User } from "@prisma/client";
 import express, { Request, Response } from "express";
 import verify from "../middlewares/verifyToken";
-import {
-  deleteUser,
-  getAllUser,
-  getSingleUser,
-  updateUser,
-} from "../controllers/userController";
+import userController from "../controllers/userController";
 
 const router = express.Router();
+
+const { deleteUser, getAllUser, getSingleUser, updateUser } = userController;
 
 //GET ALL USERS
 router.get("/", getAllUser);

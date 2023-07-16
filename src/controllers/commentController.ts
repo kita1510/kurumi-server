@@ -1,9 +1,8 @@
 /** @format */
 
-import express, { Request, Response } from "express";
+import { Request, Response } from "express";
 import { PrismaClient, Comment } from "@prisma/client";
 
-const router = express.Router();
 const prisma = new PrismaClient();
 
 const getAllComment = async (req: Request, res: Response) => {
@@ -112,7 +111,7 @@ const updateComment = async (req: Request, res: Response) => {
   }
 };
 
-export {
+export default {
   getAllComment,
   getOneComment,
   createComment,

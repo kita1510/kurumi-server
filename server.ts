@@ -18,8 +18,10 @@ const PORT = process.env.PORT || 3001;
 async function main() {}
 
 app.use(cors());
-
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// API
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);

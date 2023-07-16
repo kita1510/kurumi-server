@@ -83,4 +83,4 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-export { getAllUser, getSingleUser, updateUser,deleteUser };
+export default { getAllUser, getSingleUser, updateUser, deleteUser };

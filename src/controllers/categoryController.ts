@@ -80,7 +80,7 @@ const addPostIntoCategory = async (req: Request, res: Response) => {
   }
 };
 
-export {
+export default {
   getAllCategory,
   getPostByCategory,
   createCategory,

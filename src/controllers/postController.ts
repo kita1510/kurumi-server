@@ -106,4 +106,4 @@ const deletePost = async (req: Request, res: Response) => {
   }
 };
 
-export { getAllPosts, getSinglePost, createPost, updatePost, deletePost };
+export default { getAllPosts, getSinglePost, createPost, updatePost, deletePost };
